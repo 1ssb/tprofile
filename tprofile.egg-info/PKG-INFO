@@ -1,0 +1,93 @@
+Metadata-Version: 2.2
+Name: tprofile
+Version: 0.1.0
+Summary: A combined time and memory profiler using psutil
+Home-page: https://github.com/1ssb/tprofile
+Author: Subhransu S. Bhattacharjee
+Author-email: Subhransu.Bhattacharjee@anu.edu.au
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: OS Independent
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: psutil
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: requires-dist
+Dynamic: summary
+
+# tprofile
+
+tprofile is a lightweight Python library that combines time and memory profiling using `psutil`. It provides both a decorator for profiling individual functions and a command-line tool for profiling entire scripts.
+
+## Features
+
+- **Combined Time and Memory Profiling:**
+  Track execution time and process memory (RSS) before and after function execution.
+- **Easy-to-Use Decorator:**
+  Simply add `@profile` to any function to get detailed profiling output.
+- **Command-Line Tool:**
+  Run any Python script with `tprofile` to obtain an overall profiling summary.
+
+## Installation
+
+tprofile is available on PyPI. Install it using pip:
+
+```bash
+pip install tprofile
+```
+
+## Usage
+
+### 1. As a Decorator
+
+Add profiling to any function by importing and applying the decorator:
+
+```python
+from tprofile import profile
+
+@profile
+def my_function(n):
+    total = sum(range(n))
+    return total
+
+result = my_function(1000000)
+```
+
+When `my_function` is called, tprofile will print the execution time and memory usage details.
+
+### 2. As a Command-Line Tool
+
+You can profile an entire script by running:
+
+```bash
+tprofile your_script.py [script arguments...]
+```
+
+For example, if you have a script named `example.py`, run:
+
+```bash
+tprofile example.py --option value
+```
+
+This command executes the script and prints an overall profiling summary including total time elapsed and memory consumption.
+
+## How It Works
+
+* **Time Profiling:**
+
+  Uses Python's `time` module to capture the execution time before and after function calls or script runs.
+* **Memory Profiling:**
+
+  Uses `psutil` to measure the process's memory usage (RSS) before and after execution.
+
+## Contributing
+
+Contributions and improvements are welcome! Feel free to open issues or submit pull requests on GitHub.
+
+## License
+
+This project is licensed under the MIT License.

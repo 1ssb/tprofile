@@ -1,0 +1,11 @@
+LICENSE
+README.md
+setup.py
+tprofile/__init__.py
+tprofile/core.py
+tprofile.egg-info/PKG-INFO
+tprofile.egg-info/SOURCES.txt
+tprofile.egg-info/dependency_links.txt
+tprofile.egg-info/entry_points.txt
+tprofile.egg-info/requires.txt
+tprofile.egg-info/top_level.txt
