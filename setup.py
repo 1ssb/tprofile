@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="tprofile",
-    version="0.1.0",
+    name="tprofiler",
+    version="1.0.0",
     author="Subhransu S. Bhattacharjee",
     author_email="Subhransu.Bhattacharjee@anu.edu.au",
     description="A combined time and memory profiler using psutil",
@@ -15,7 +15,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "tprofile = tprofile.core:main",
+            "tprofiler = tprofiler.core:main",
         ],
     },
     classifiers=[

@@ -1,6 +1,6 @@
-# tprofile
+# tprofiler
 
-tprofile is a lightweight Python library that combines time and memory profiling using `psutil`. It provides both a decorator for profiling individual functions and a command-line tool for profiling entire scripts.
+tprofiler is a lightweight Python library that combines time and memory profiling using `psutil`. It provides both a decorator for profiling individual functions and a command-line tool for profiling entire scripts.
 
 ## Features
 
@@ -9,14 +9,14 @@ tprofile is a lightweight Python library that combines time and memory profiling
 - **Easy-to-Use Decorator:**
   Simply add `@profile` to any function to get detailed profiling output.
 - **Command-Line Tool:**
-  Run any Python script with `tprofile` to obtain an overall profiling summary.
+  Run any Python script with `tprofiler` to obtain an overall profiling summary.
 
 ## Installation
 
 tprofile is available on PyPI. Install it using pip:
 
 ```bash
-pip install tprofile
+pip install tprofiler
 ```
 
 ## Usage
@@ -43,13 +43,13 @@ When `my_function` is called, tprofile will print the execution time and memory 
 You can profile an entire script by running:
 
 ```bash
-tprofile your_script.py [script arguments...]
+tprofiler your_script.py [script arguments...]
 ```
 
 For example, if you have a script named `example.py`, run:
 
 ```bash
-tprofile example.py --option value
+tprofiler example.py --option value
 ```
 
 This command executes the script and prints an overall profiling summary including total time elapsed and memory consumption.
