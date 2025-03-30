@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="tprofiler",
-    version="1.0.2",
+    version="1.0.3",
     author="Subhransu S. Bhattacharjee",
     author_email="Subhransu.Bhattacharjee@anu.edu.au",
     description="A combined time and memory profiler using psutil",
