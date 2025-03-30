@@ -13,7 +13,7 @@ tprofiler is a lightweight Python library that combines time and memory profilin
 
 ## Installation
 
-tprofile is available on PyPI. Install it using pip:
+tprofiler is available on PyPI. Install it using pip:
 
 ```bash
 pip install tprofiler
@@ -26,9 +26,9 @@ pip install tprofiler
 Add profiling to any function by importing and applying the decorator:
 
 ```python
-from tprofile import profile
+from tprofiler import profile
 
-@profile
+@profile(enable_memory=True, enable_time=True, verbose=True)
 def my_function(n):
     total = sum(range(n))
     return total
@@ -36,7 +36,7 @@ def my_function(n):
 result = my_function(1000000)
 ```
 
-When `my_function` is called, tprofile will print the execution time and memory usage details.
+When `my_function` is called, tprofiler prints the execution time and memory usage details, along with the function's return value if `verbose` is enabled.
 
 ### 2. As a Command-Line Tool
 
@@ -57,16 +57,17 @@ This command executes the script and prints an overall profiling summary includi
 ## How It Works
 
 * **Time Profiling:**
-
+  
   Uses Python's `time` module to capture the execution time before and after function calls or script runs.
 * **Memory Profiling:**
-
+  
   Uses `psutil` to measure the process's memory usage (RSS) before and after execution.
 
 ## Contributing
 
-Contributions and improvements are welcome! Feel free to open issues or submit pull requests on GitHub.
+Contributions and improvements are welcome! Feel free to open issues or submit pull requests on [GitHub](https://github.com/1ssb/tprofiler).
 
 ## License
 
 This project is licensed under the MIT License.
+

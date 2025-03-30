@@ -10,9 +10,14 @@ from tprofiler.core import profile
 import time
 import numpy as np
 
-@profile(enable_memory=True, enable_time=True, verbose=False)
+# @profile(enable_memory=True, enable_time=True, verbose=False)
+# def compute_heavy(n):
+#     """Simulates heavy computation by creating a large list and summing its contents."""
+#     data = [i for i in range(n)]
+#     return sum(data)
+
+@profile.line
 def compute_heavy(n):
-    """Simulates heavy computation by creating a large list and summing its contents."""
     data = [i for i in range(n)]
     return sum(data)
 

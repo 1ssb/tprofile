@@ -1,10 +1,17 @@
 #!/usr/bin/env python
 """
-tprofiler: A combined time and memory profiling library using psutil.
+tprofiler: A total profiling library combining function-level, block-level,
+and line-by-line profiling using psutil and line_profiler.
 
-Usage as a decorator:
+Usage as a decorator for function/block profiling:
     from tprofiler.core import profile
     @profile(enable_memory=True, enable_time=True, verbose=True)
+    def my_function(...):
+        ...
+
+Usage as a line-by-line profiler:
+    from tprofiler.core import profile
+    @profile.line
     def my_function(...):
         ...
 
@@ -29,7 +36,7 @@ from typing import Any, Callable, Optional, TypeVar
 logging.basicConfig(level=logging.INFO, format='%(message)s')
 logger = logging.getLogger(__name__)
 
-# Define a generic type for decorator return.
+# Define a generic type for decorators.
 T = TypeVar("T", bound=Callable[..., Any])
 
 def profile(enable_memory: bool = True, enable_time: bool = True, verbose: bool = True) -> Callable[[T], T]:
@@ -70,10 +77,46 @@ def profile(enable_memory: bool = True, enable_time: bool = True, verbose: bool 
             if verbose:
                 logger.info(f"Result of {func.__name__}: {result}")
             logger.info("=" * 40)
-
             return result
         return wrapper  # type: ignore
     return decorator
+
+def profile_line(func: T) -> T:
+    """
+    Decorator that performs line-by-line profiling of the wrapped function
+    using the line_profiler package.
+
+    Usage:
+        @profile.line
+        def my_function(...):
+            ...
+    
+    Requires:
+        line_profiler must be installed.
+    """
+    try:
+        from line_profiler import LineProfiler
+    except ImportError:
+        raise ImportError("line_profiler is required for line-by-line profiling. Please install it via 'pip install line_profiler'.")
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        lp = LineProfiler()
+        lp.add_function(func)
+        result = lp(func)(*args, **kwargs)
+        # Capture and log line-by-line stats.
+        import io
+        out = io.StringIO()
+        lp.print_stats(stream=out)
+        stats = out.getvalue()
+        logger.info("=" * 40)
+        logger.info(f"Line Profiling Statistics for function {func.__name__}:\n{stats}")
+        logger.info("=" * 40)
+        return result
+    return wrapper  # type: ignore
+
+# Attach the line profiling decorator as an attribute of profile.
+profile.line = profile_line
 
 class ProfileContext:
     """

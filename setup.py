@@ -11,7 +11,7 @@ setup(
     url="https://github.com/1ssb/tprofile",
     packages=find_packages(),
     install_requires=[
-        "psutil",
+        "psutil", "line_profiler"
     ],
     entry_points={
         "console_scripts": [

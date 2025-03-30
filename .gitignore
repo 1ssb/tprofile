@@ -20,3 +20,6 @@ env/
 
 # OS-specific files
 .DS_Store
+
+# Logging files
+*.log
