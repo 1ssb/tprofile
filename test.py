@@ -10,12 +10,7 @@ from tprofiler.core import profile
 import time
 import numpy as np
 
-# @profile(enable_memory=True, enable_time=True, verbose=False)
-# def compute_heavy(n):
-#     """Simulates heavy computation by creating a large list and summing its contents."""
-#     data = [i for i in range(n)]
-#     return sum(data)
-
+# Using line-by-line profiling for compute_heavy
 @profile.line
 def compute_heavy(n):
     data = [i for i in range(n)]
@@ -50,5 +45,40 @@ def test_profile_only():
     
     print("=== Test Completed ===")
 
+# Function with line-by-line profiling accepting variable arguments.
+@profile.line
+def variadic_line_profile(*args, **kwargs):
+    # Simulate some processing: sum numbers, and process keyword values.
+    total = sum(arg for arg in args if isinstance(arg, (int, float)))
+    # Process kwargs: if a value is a list, sum its elements
+    for key, value in kwargs.items():
+        if isinstance(value, list):
+            total += sum(value)
+        elif isinstance(value, (int, float)):
+            total += value
+    return total
+
+# Standard function with profiling accepting variable arguments.
+@profile(enable_memory=True, enable_time=True, verbose=True)
+def variadic_function(*args, **kwargs):
+    # Return all positional arguments and keyword arguments as a tuple
+    return args, kwargs
+
+def test_variadic():
+    print("=== Testing Variadic Functions with tprofiler ===\n")
+    
+    print("Test 1: variadic_line_profile with multiple inputs")
+    result_line = variadic_line_profile(10, 20, 30, extra=[1, 2, 3], factor=2)
+    print("\n")
+    
+    print("Test 2: variadic_function with multiple inputs")
+    result_var = variadic_function("hello", "world", a=100, b=[4, 5, 6], c={"key": "value"})
+    print("Returned from variadic_function:", result_var)
+    print("\n")
+    
+    print("=== Variadic Tests Completed ===")
+
+    
 if __name__ == "__main__":
     test_profile_only()
+    test_variadic()

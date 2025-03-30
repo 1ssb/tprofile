@@ -30,7 +30,7 @@ pip install tprofiler
 Add profiling to any function by importing and applying the decorator:
 
 ```python
-from tprofiler import profile
+from tprofiler.core import profile
 
 @profile(enable_memory=True, enable_time=True, verbose=True)
 def my_function(n):
@@ -47,7 +47,7 @@ When `my_function` is called, tprofiler prints the execution time and memory usa
 For a detailed line-by-line analysis, use the line profiling decorator:
 
 ```python
-from tprofiler import profile
+from tprofiler.core import profile
 
 @profile.line
 def compute_heavy(n):
@@ -91,13 +91,13 @@ with ProfileContext(enable_memory=True, enable_time=True):
 ## How It Works
 
 * **Time Profiling:**
-  
+
   Uses Python's `time` module to capture the execution time before and after function calls or code blocks.
 * **Memory Profiling:**
-  
+
   Uses `psutil` to measure the process's memory usage (RSS) before and after execution.
 * **Line Profiling:**
-  
+
   Integrates with `line_profiler` to provide detailed per-line execution statistics.
 
 ## Contributing
@@ -107,4 +107,3 @@ Contributions and improvements are welcome! Feel free to open issues or submit p
 ## License
 
 This project is licensed under the MIT License.
-

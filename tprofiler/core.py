@@ -39,6 +39,9 @@ logger = logging.getLogger(__name__)
 # Define a generic type for decorators.
 T = TypeVar("T", bound=Callable[..., Any])
 
+# Maximum characters to show for a function's output representation.
+_MAX_RESULT_LENGTH = 1000
+
 def profile(enable_memory: bool = True, enable_time: bool = True, verbose: bool = True) -> Callable[[T], T]:
     """
     Decorator that profiles memory and time usage of the wrapped function.
@@ -63,7 +66,20 @@ def profile(enable_memory: bool = True, enable_time: bool = True, verbose: bool 
             mem_before: Optional[float] = process.memory_info().rss / (1024 ** 2) if enable_memory else None
             time_before: Optional[float] = time.time() if enable_time else None
 
-            result = func(*args, **kwargs)
+            try:
+                result = func(*args, **kwargs)
+            except Exception as e:
+                # Even if an exception occurs, capture end time/memory.
+                time_after = time.time() if enable_time else None
+                mem_after = process.memory_info().rss / (1024 ** 2) if enable_memory else None
+                logger.error("=" * 40)
+                logger.error(f"Function: {func.__name__} raised an exception: {e}")
+                if enable_time and time_before is not None and time_after is not None:
+                    logger.error(f"Time elapsed (until exception): {time_after - time_before:.6f} seconds")
+                if enable_memory and mem_before is not None and mem_after is not None:
+                    logger.error(f"Memory usage (until exception): before: {mem_before:.2f} MB, after: {mem_after:.2f} MB, diff: {mem_after - mem_before:.2f} MB")
+                logger.error("=" * 40)
+                raise
 
             time_after: Optional[float] = time.time() if enable_time else None
             mem_after: Optional[float] = process.memory_info().rss / (1024 ** 2) if enable_memory else None
@@ -75,7 +91,10 @@ def profile(enable_memory: bool = True, enable_time: bool = True, verbose: bool 
             if enable_memory and mem_before is not None and mem_after is not None:
                 logger.info(f"Memory usage: before: {mem_before:.2f} MB, after: {mem_after:.2f} MB, diff: {mem_after - mem_before:.2f} MB")
             if verbose:
-                logger.info(f"Result of {func.__name__}: {result}")
+                result_repr = repr(result)
+                if len(result_repr) > _MAX_RESULT_LENGTH:
+                    result_repr = result_repr[:_MAX_RESULT_LENGTH] + '...'
+                logger.info(f"Result of {func.__name__}: {result_repr}")
             logger.info("=" * 40)
             return result
         return wrapper  # type: ignore
