@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import annotations
 """
 tprofiler: A total profiling library combining function-level, block-level,
 and line-by-line profiling using psutil and line_profiler.
@@ -42,20 +43,18 @@ T = TypeVar("T", bound=Callable[..., Any])
 # Maximum characters to show for a function's output representation.
 _MAX_RESULT_LENGTH = 1000
 
-def profile(enable_memory: bool = True, enable_time: bool = True, verbose: bool = True) -> Callable[[T], T]:
+def profile(_func: Optional[T] = None, *, enable_memory: bool = True, enable_time: bool = True, verbose: bool = True) -> Callable[[T], T]:
     """
     Decorator that profiles memory and time usage of the wrapped function.
+    Can be used with or without parentheses.
 
-    Args:
-        enable_memory (bool): Enable memory profiling (default True).
-        enable_time (bool): Enable time profiling (default True).
-        verbose (bool): If True, logs the function's return value (default True).
-
-    Returns:
-        The wrapped function with profiling.
-
-    Usage:
+    Usage with parentheses:
         @profile(enable_memory=True, enable_time=True, verbose=True)
+        def my_function(...):
+            ...
+
+    Usage without parentheses:
+        @profile
         def my_function(...):
             ...
     """
@@ -71,7 +70,7 @@ def profile(enable_memory: bool = True, enable_time: bool = True, verbose: bool 
             except Exception as e:
                 # Even if an exception occurs, capture end time/memory.
                 time_after = time.time() if enable_time else None
-                mem_after = process.memory_info().rss / (1024 ** 2) if enable_memory else None
+                mem_after: Optional[float] = process.memory_info().rss / (1024 ** 2) if enable_memory else None
                 logger.error("=" * 40)
                 logger.error(f"Function: {func.__name__} raised an exception: {e}")
                 if enable_time and time_before is not None and time_after is not None:
@@ -98,7 +97,10 @@ def profile(enable_memory: bool = True, enable_time: bool = True, verbose: bool 
             logger.info("=" * 40)
             return result
         return wrapper  # type: ignore
-    return decorator
+    if _func is None:
+        return decorator
+    else:
+        return decorator(_func)
 
 def profile_line(func: T) -> T:
     """
@@ -153,7 +155,7 @@ class ProfileContext:
         self.time_before: Optional[float] = None
         self.process = psutil.Process()
 
-    def __enter__(self) -> "ProfileContext":
+    def __enter__(self) -> ProfileContext:
         if self.enable_memory:
             self.mem_before = self.process.memory_info().rss / (1024 ** 2)
         if self.enable_time:
